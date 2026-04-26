@@ -10,25 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { isAuthenticated, login, logout } from "@/lib/auth";
 import { downloadCSV, toCSV } from "@/lib/csv";
-import { SITE } from "@/config/site";
-
-interface RsvpResponse {
-  guestId?: string;
-  name?: string;
-  side?: string;
-  attending?: boolean;
-  plusOne?: boolean;
-  dietaryNotes?: string;
-  message?: string;
-  timestamp?: string;
-}
-
-async function fetchResponses(): Promise<RsvpResponse[]> {
-  const res = await fetch(`${SITE.apiBaseUrl}/api/rsvps`);
-  if (!res.ok) return [];
-  const data = await res.json();
-  return Array.isArray(data.responses) ? data.responses : [];
-}
+import { getRsvpResponses, clearRsvpResponses, type RsvpResponse } from "@/lib/rsvp-store";
 
 export default function Admin() {
   useDocumentMeta(
@@ -104,8 +86,8 @@ function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
 function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [responses, setResponses] = useState<RsvpResponse[]>([]);
 
-  const refresh = async () => {
-    setResponses(await fetchResponses());
+  const refresh = () => {
+    setResponses(getRsvpResponses());
   };
 
   useEffect(() => {
@@ -136,11 +118,11 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     downloadCSV(`rsvp-responses-${stamp}.csv`, toCSV(rows));
   };
 
-  const handleClear = async () => {
-    const ok = window.confirm("Permanently delete all RSVP responses stored centrally? This cannot be undone.");
+  const handleClear = () => {
+    const ok = window.confirm("Permanently delete all RSVP responses stored on this device? This cannot be undone.");
     if (!ok) return;
-    await fetch(`${SITE.apiBaseUrl}/api/rsvps`, { method: "DELETE" });
-    await refresh();
+    clearRsvpResponses();
+    refresh();
   };
 
   const handleLogout = () => {
@@ -155,7 +137,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           <div>
             <p className="eyebrow mb-2">Private Dashboard</p>
             <h1 className="font-display text-3xl md:text-4xl text-saffron-gradient">RSVP Responses</h1>
-            <p className="text-foreground/65 mt-2 max-w-xl">Responses are saved centrally on the API server. Use Export to download them as a spreadsheet.</p>
+            <p className="text-foreground/65 mt-2 max-w-xl">Responses are saved locally in the browser so the whole site can be exported as one file. Use Export to download them as a spreadsheet.</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <button onClick={refresh} className="px-4 py-2 rounded-full border border-primary/35 text-primary hover:bg-primary/10 transition-colors text-sm flex items-center gap-2">

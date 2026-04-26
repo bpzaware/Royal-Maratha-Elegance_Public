@@ -23,6 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { SITE } from "@/config/site";
+import { saveRsvpResponse } from "@/lib/rsvp-store";
 
 const rsvpSchema = z.object({
   attending: z.boolean().default(true),
@@ -90,24 +91,13 @@ export default function RSVP() {
     if (!selectedGuest) return;
     setSubmitError("");
 
-    const response = {
-      guestId: selectedGuest.id,
-      name: selectedGuest.name,
-      side: selectedGuest.side,
-      ...data,
-    };
-
     try {
-      const res = await fetch(`${SITE.apiBaseUrl}/api/rsvps`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(response),
+      saveRsvpResponse({
+        guestId: selectedGuest.id,
+        name: selectedGuest.name,
+        side: selectedGuest.side,
+        ...data,
       });
-
-      if (!res.ok) {
-        throw new Error("Failed to submit RSVP");
-      }
-
       setIsSubmitted(true);
     } catch {
       setSubmitError(
