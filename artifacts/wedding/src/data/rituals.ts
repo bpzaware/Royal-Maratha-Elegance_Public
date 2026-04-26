@@ -1,7 +1,7 @@
-import { Ring, Droplet, Brush, Music, Gift, Users, HandHeart, GlassWater } from "lucide-react";
+import { Gem, Droplet, Brush, Music, Gift, Users, HandHeart, GlassWater } from "lucide-react";
 
 export const RITUALS = [
-  { id: "sakharpuda", name: "Sakharpuda", subtitle: "Engagement Ceremony", description: "The formal engagement ceremony where the couple exchanges rings and families exchange sugar (sakhar) as a sweet beginning.", icon: Ring, date: "24 Nov, Morning" },
+  { id: "sakharpuda", name: "Sakharpuda", subtitle: "Engagement Ceremony", description: "The formal engagement ceremony where the couple exchanges rings and families exchange sugar (sakhar) as a sweet beginning.", icon: Gem, date: "24 Nov, Morning" },
   { id: "haldi", name: "Haldi", subtitle: "Turmeric Ceremony", description: "A playful and vibrant ceremony where a paste of turmeric, sandalwood, and rose water is applied to the bride and groom.", icon: Droplet, date: "24 Nov, Afternoon" },
   { id: "mehendi", name: "Mehendi", subtitle: "Henna Ceremony", description: "Intricate henna designs are applied to the bride's hands and feet, symbolizing joy, beauty, and spiritual awakening.", icon: Brush, date: "24 Nov, Evening" },
   { id: "sangeet", name: "Sangeet", subtitle: "Musical Night", description: "A night of music, dance, and celebration where both families come together to perform and celebrate the upcoming union.", icon: Music, date: "25 Nov, Evening" },

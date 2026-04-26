@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 
 const NAV_LINKS = [
@@ -45,9 +45,7 @@ export function Navbar() {
               </button>
             </SheetTrigger>
             <SheetContent side="right" className="bg-background/95 backdrop-blur-xl border-l-primary/20 sm:max-w-xs">
-              <VisuallyHidden asChild>
-                <SheetTitle>Navigation Menu</SheetTitle>
-              </VisuallyHidden>
+              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
               <nav className="flex flex-col gap-6 mt-12">
                 {NAV_LINKS.map((link) => (
                   <Link
