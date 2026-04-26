@@ -37,7 +37,7 @@ export const SITE = {
    * Leave empty ("") to show a "coming soon" message instead.
    * Tip: open your album in Google Photos, click Share, then "Create link".
    */
-  galleryUrl: "", // e.g. "https://photos.app.goo.gl/XXXXXXXXXX"
+  galleryUrl: "https://photos.app.goo.gl/ayS2NzmLMyvqnCuR8", // e.g. "https://photos.app.goo.gl/XXXXXXXXXX"
 
   /**
    * TRAVEL HELPER

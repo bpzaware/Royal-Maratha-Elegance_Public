@@ -15,7 +15,7 @@ export default function Rituals() {
     <PageTransition>
       <div className="container mx-auto px-4 max-w-4xl">
         <SectionHeading
-          eyebrow="Vivah Vidhi"
+          eyebrow="Wedding Ceremony"
           subtitle="From the playful Haldi to the sacred Saat Phere — the ceremonies that weave two souls into one."
         >
           The Sacred Ceremonies

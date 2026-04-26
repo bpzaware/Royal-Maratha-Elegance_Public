@@ -6,8 +6,8 @@ import { ExploreSection } from "@/pages/home-sections/ExploreSection";
 
 export default function Home() {
   useDocumentMeta(
-    "Shubh Vivah",
-    "Sanket More & Bhagyashree Zaware — a sacred Hindu-Maratha wedding on 26 November 2026."
+    "Wedding Ceremony",
+    "Sanket More & Bhagyashree Zaware — wedding on 26 November 2026."
   );
 
   return (
