@@ -32,7 +32,6 @@ const rsvpSchema = z.object({
 });
 
 type RsvpFormValues = z.infer<typeof rsvpSchema>;
-
 type GuestRecord = (typeof GUEST_LIST)[number];
 
 export default function RSVP() {
@@ -45,6 +44,7 @@ export default function RSVP() {
   const [selectedGuest, setSelectedGuest] = useState<GuestRecord | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [notFound, setNotFound] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const form = useForm<RsvpFormValues>({
     resolver: zodResolver(rsvpSchema),
@@ -86,27 +86,34 @@ export default function RSVP() {
         ).slice(0, 5)
       : [];
 
-  const onSubmit = (data: RsvpFormValues) => {
+  const onSubmit = async (data: RsvpFormValues) => {
     if (!selectedGuest) return;
+    setSubmitError("");
+
     const response = {
       guestId: selectedGuest.id,
       name: selectedGuest.name,
       side: selectedGuest.side,
       ...data,
-      timestamp: new Date().toISOString(),
     };
+
     try {
-      const existing = JSON.parse(
-        localStorage.getItem("rsvp_responses") || "[]"
-      );
-      localStorage.setItem(
-        "rsvp_responses",
-        JSON.stringify([...existing, response])
-      );
+      const res = await fetch(`${SITE.apiBaseUrl}/api/rsvps`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(response),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to submit RSVP");
+      }
+
+      setIsSubmitted(true);
     } catch {
-      // ignore — localStorage might be disabled
+      setSubmitError(
+        "We couldn't save your RSVP right now. Please try again in a moment."
+      );
     }
-    setIsSubmitted(true);
   };
 
   return (
@@ -122,15 +129,12 @@ export default function RSVP() {
         {isSubmitted ? (
           <GlassCard className="text-center py-12">
             <Heart className="w-12 h-12 text-secondary fill-secondary/20 mx-auto mb-6" />
-            <p className="font-marathi text-xl text-secondary mb-2">
-              धन्यवाद!
-            </p>
+            <p className="font-marathi text-xl text-secondary mb-2">धन्यवाद!</p>
             <h3 className="font-display text-2xl text-saffron-gradient mb-3">
               Thank You
             </h3>
             <p className="font-serif text-lg text-foreground/80">
-              We can't wait to celebrate with you,{" "}
-              <strong>{selectedGuest?.name}</strong>.
+              We can't wait to celebrate with you, <strong>{selectedGuest?.name}</strong>.
             </p>
           </GlassCard>
         ) : (
@@ -197,10 +201,7 @@ export default function RSVP() {
                 </div>
 
                 <Form {...form}>
-                  <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-6"
-                  >
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                     <FormField
                       control={form.control}
                       name="attending"
@@ -293,6 +294,10 @@ export default function RSVP() {
                           )}
                         />
                       </>
+                    )}
+
+                    {submitError && (
+                      <p className="text-sm text-destructive">{submitError}</p>
                     )}
 
                     <div className="pt-4">

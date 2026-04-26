@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { isAuthenticated, login, logout } from "@/lib/auth";
 import { downloadCSV, toCSV } from "@/lib/csv";
+import { SITE } from "@/config/site";
 
 interface RsvpResponse {
   guestId?: string;
@@ -22,15 +23,11 @@ interface RsvpResponse {
   timestamp?: string;
 }
 
-function readResponses(): RsvpResponse[] {
-  try {
-    const raw = localStorage.getItem("rsvp_responses");
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
+async function fetchResponses(): Promise<RsvpResponse[]> {
+  const res = await fetch(`${SITE.apiBaseUrl}/api/rsvps`);
+  if (!res.ok) return [];
+  const data = await res.json();
+  return Array.isArray(data.responses) ? data.responses : [];
 }
 
 export default function Admin() {
@@ -46,8 +43,6 @@ export default function Admin() {
   }
   return <AdminDashboard onLogout={() => setAuthed(false)} />;
 }
-
-/* ----------------------------------------------------------------- */
 
 function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
   const [username, setUsername] = useState("");
@@ -84,45 +79,21 @@ function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <Label
-                htmlFor="username"
-                className="font-display tracking-[0.16em] uppercase text-xs text-secondary mb-2 block"
-              >
+              <Label htmlFor="username" className="font-display tracking-[0.16em] uppercase text-xs text-secondary mb-2 block">
                 Username
               </Label>
-              <Input
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="bg-white border-primary/30 h-11 focus-visible:ring-primary"
-                autoComplete="username"
-                autoFocus
-              />
+              <Input id="username" value={username} onChange={(e) => setUsername(e.target.value)} className="bg-white border-primary/30 h-11 focus-visible:ring-primary" autoComplete="username" autoFocus />
             </div>
             <div>
-              <Label
-                htmlFor="password"
-                className="font-display tracking-[0.16em] uppercase text-xs text-secondary mb-2 block"
-              >
+              <Label htmlFor="password" className="font-display tracking-[0.16em] uppercase text-xs text-secondary mb-2 block">
                 Password
               </Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="bg-white border-primary/30 h-11 focus-visible:ring-primary"
-                autoComplete="current-password"
-              />
+              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="bg-white border-primary/30 h-11 focus-visible:ring-primary" autoComplete="current-password" />
             </div>
 
-            {error && (
-              <p className="text-sm text-destructive text-center">{error}</p>
-            )}
+            {error && <p className="text-sm text-destructive text-center">{error}</p>}
 
-            <GoldButton type="submit" className="w-full">
-              Enter
-            </GoldButton>
+            <GoldButton type="submit" className="w-full">Enter</GoldButton>
           </form>
         </GlassCard>
       </div>
@@ -130,12 +101,12 @@ function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
   );
 }
 
-/* ----------------------------------------------------------------- */
-
 function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [responses, setResponses] = useState<RsvpResponse[]>([]);
 
-  const refresh = () => setResponses(readResponses());
+  const refresh = async () => {
+    setResponses(await fetchResponses());
+  };
 
   useEffect(() => {
     refresh();
@@ -165,13 +136,11 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     downloadCSV(`rsvp-responses-${stamp}.csv`, toCSV(rows));
   };
 
-  const handleClear = () => {
-    const ok = window.confirm(
-      "Permanently delete all RSVP responses stored on this device? This cannot be undone."
-    );
+  const handleClear = async () => {
+    const ok = window.confirm("Permanently delete all RSVP responses stored centrally? This cannot be undone.");
     if (!ok) return;
-    localStorage.removeItem("rsvp_responses");
-    refresh();
+    await fetch(`${SITE.apiBaseUrl}/api/rsvps`, { method: "DELETE" });
+    await refresh();
   };
 
   const handleLogout = () => {
@@ -185,35 +154,18 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
         <div className="flex flex-wrap items-end justify-between gap-4 mb-10">
           <div>
             <p className="eyebrow mb-2">Private Dashboard</p>
-            <h1 className="font-display text-3xl md:text-4xl text-saffron-gradient">
-              RSVP Responses
-            </h1>
-            <p className="text-foreground/65 mt-2 max-w-xl">
-              Responses are saved locally in this browser. Use Export to
-              download them as a spreadsheet.
-            </p>
+            <h1 className="font-display text-3xl md:text-4xl text-saffron-gradient">RSVP Responses</h1>
+            <p className="text-foreground/65 mt-2 max-w-xl">Responses are saved centrally on the API server. Use Export to download them as a spreadsheet.</p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <button
-              onClick={refresh}
-              className="px-4 py-2 rounded-full border border-primary/35 text-primary hover:bg-primary/10 transition-colors text-sm flex items-center gap-2"
-            >
-              <RefreshCcw className="w-4 h-4" />
-              Refresh
+            <button onClick={refresh} className="px-4 py-2 rounded-full border border-primary/35 text-primary hover:bg-primary/10 transition-colors text-sm flex items-center gap-2">
+              <RefreshCcw className="w-4 h-4" /> Refresh
             </button>
-            <button
-              onClick={handleClear}
-              className="px-4 py-2 rounded-full border border-destructive/40 text-destructive hover:bg-destructive/10 transition-colors text-sm flex items-center gap-2"
-            >
-              <Trash2 className="w-4 h-4" />
-              Clear All
+            <button onClick={handleClear} className="px-4 py-2 rounded-full border border-destructive/40 text-destructive hover:bg-destructive/10 transition-colors text-sm flex items-center gap-2">
+              <Trash2 className="w-4 h-4" /> Clear All
             </button>
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 rounded-full border border-foreground/25 text-foreground/70 hover:bg-foreground/5 transition-colors text-sm flex items-center gap-2"
-            >
-              <LogOut className="w-4 h-4" />
-              Sign Out
+            <button onClick={handleLogout} className="px-4 py-2 rounded-full border border-foreground/25 text-foreground/70 hover:bg-foreground/5 transition-colors text-sm flex items-center gap-2">
+              <LogOut className="w-4 h-4" /> Sign Out
             </button>
           </div>
         </div>
@@ -228,20 +180,14 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
 
         <GlassCard className="p-0 overflow-hidden">
           <div className="flex items-center justify-between p-4 border-b border-primary/15 bg-primary/5">
-            <h2 className="font-display tracking-[0.14em] uppercase text-sm text-secondary">
-              All Submissions
-            </h2>
+            <h2 className="font-display tracking-[0.14em] uppercase text-sm text-secondary">All Submissions</h2>
             <GoldButton onClick={handleExport} disabled={responses.length === 0}>
-              <Download className="w-4 h-4 mr-2 inline-block" />
-              Export CSV
+              <Download className="w-4 h-4 mr-2 inline-block" /> Export CSV
             </GoldButton>
           </div>
 
           {responses.length === 0 ? (
-            <div className="p-12 text-center text-foreground/60">
-              No responses yet. As guests RSVP from this device, they will
-              appear here.
-            </div>
+            <div className="p-12 text-center text-foreground/60">No responses yet. As guests RSVP from any device, they will appear here.</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -258,35 +204,14 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                 </thead>
                 <tbody>
                   {[...responses].reverse().map((r, i) => (
-                    <tr
-                      key={`${r.timestamp}-${i}`}
-                      className="border-b border-primary/10 hover:bg-primary/5"
-                    >
-                      <Td className="whitespace-nowrap text-foreground/70">
-                        {r.timestamp
-                          ? new Date(r.timestamp).toLocaleString()
-                          : "—"}
-                      </Td>
+                    <tr key={`${r.timestamp}-${i}`} className="border-b border-primary/10 hover:bg-primary/5">
+                      <Td className="whitespace-nowrap text-foreground/70">{r.timestamp ? new Date(r.timestamp).toLocaleString() : "—"}</Td>
                       <Td className="font-medium">{r.name ?? "—"}</Td>
                       <Td className="capitalize">{r.side ?? "—"}</Td>
-                      <Td>
-                        {r.attending ? (
-                          <span className="px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-700">
-                            Yes
-                          </span>
-                        ) : (
-                          <span className="px-2 py-0.5 text-xs rounded-full bg-secondary/15 text-secondary">
-                            No
-                          </span>
-                        )}
-                      </Td>
+                      <Td>{r.attending ? <span className="px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-700">Yes</span> : <span className="px-2 py-0.5 text-xs rounded-full bg-secondary/15 text-secondary">No</span>}</Td>
                       <Td>{r.plusOne ? "Yes" : "—"}</Td>
-                      <Td className="max-w-xs truncate" title={r.dietaryNotes}>
-                        {r.dietaryNotes || "—"}
-                      </Td>
-                      <Td className="max-w-xs truncate" title={r.message}>
-                        {r.message || "—"}
-                      </Td>
+                      <Td className="max-w-xs truncate" title={r.dietaryNotes}>{r.dietaryNotes || "—"}</Td>
+                      <Td className="max-w-xs truncate" title={r.message}>{r.message || "—"}</Td>
                     </tr>
                   ))}
                 </tbody>
@@ -299,29 +224,11 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   );
 }
 
-function Stat({
-  label,
-  value,
-  accent = false,
-}: {
-  label: string;
-  value: number;
-  accent?: boolean;
-}) {
+function Stat({ label, value, accent = false }: { label: string; value: number; accent?: boolean; }) {
   return (
-    <GlassCard
-      className={`text-center py-5 ${accent ? "ring-1 ring-primary/30" : ""}`}
-    >
-      <div
-        className={`font-display text-3xl font-bold ${
-          accent ? "text-saffron-gradient" : "text-secondary"
-        }`}
-      >
-        {value}
-      </div>
-      <div className="text-[10px] font-display tracking-[0.22em] uppercase text-foreground/55 mt-2">
-        {label}
-      </div>
+    <GlassCard className={`text-center py-5 ${accent ? "ring-1 ring-primary/30" : ""}`}>
+      <div className={`font-display text-3xl font-bold ${accent ? "text-saffron-gradient" : "text-secondary"}`}>{value}</div>
+      <div className="text-[10px] font-display tracking-[0.22em] uppercase text-foreground/55 mt-2">{label}</div>
     </GlassCard>
   );
 }
@@ -330,12 +237,6 @@ function Th({ children }: { children: React.ReactNode }) {
   return <th className="text-left px-4 py-3 font-display">{children}</th>;
 }
 
-function Td({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+function Td({ children, className = "" }: { children: React.ReactNode; className?: string; }) {
   return <td className={`px-4 py-3 ${className}`}>{children}</td>;
 }

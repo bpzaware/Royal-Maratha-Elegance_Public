@@ -54,13 +54,17 @@ export const SITE = {
   },
 
   /**
-   * ADMIN LOGIN (front-end only — for local RSVP review and CSV export)
-   * Note: this is a client-side gate; do not store anything secret here.
+   * ADMIN LOGIN
    */
   admin: {
     username: "Bhagyashree",
     password: "Sanket2026",
   },
+
+  /**
+   * API SERVER
+   */
+  apiBaseUrl: import.meta.env.VITE_API_BASE_URL || "",
 } as const;
 
 export const PALETTE = {
