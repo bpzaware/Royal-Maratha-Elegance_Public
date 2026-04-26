@@ -1,0 +1,12 @@
+[
+  {
+    "guestId": "3",
+    "name": "Amit Patil",
+    "side": "groom",
+    "attending": true,
+    "plusOne": true,
+    "dietaryNotes": "Jain",
+    "message": "Hello!",
+    "timestamp": "2026-04-26T14:46:29.453Z"
+  }
+]
