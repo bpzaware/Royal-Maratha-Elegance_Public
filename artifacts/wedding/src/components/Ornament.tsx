@@ -1,16 +1,21 @@
 import { cn } from "@/lib/utils";
 
+/** Decorative center motif — gold lotus-paisley separator. */
 export function Ornament({ className }: { className?: string }) {
   return (
-    <div className={cn("w-24 h-6 opacity-80", className)}>
-      <svg viewBox="0 0 100 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M50 15C45 5 35 0 25 0C11.1929 0 0 11.1929 0 25C0 27.7614 2.23858 30 5 30C7.76142 30 10 27.7614 10 25C10 16.7157 16.7157 10 25 10C30 10 35 12 40 18C43.5 22.5 46.5 25 50 25C53.5 25 56.5 22.5 60 18C65 12 70 10 75 10C83.2843 10 90 16.7157 90 25C90 27.7614 92.2386 30 95 30C97.7614 30 100 27.7614 100 25C100 11.1929 88.8071 0 75 0C65 0 55 5 50 15Z"
-          fill="currentColor"
-          className="text-primary"
-        />
-        <circle cx="50" cy="15" r="3" fill="currentColor" className="text-primary" />
+    <div
+      className={cn(
+        "flex items-center justify-center gap-3 text-accent",
+        className
+      )}
+      aria-hidden="true"
+    >
+      <span className="rule-gold w-16" />
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2 C 13 6 16 9 12 12 C 8 9 11 6 12 2 Z M12 22 C 11 18 8 15 12 12 C 16 15 13 18 12 22 Z M2 12 C 6 11 9 8 12 12 C 9 16 6 13 2 12 Z M22 12 C 18 13 15 16 12 12 C 15 8 18 11 22 12 Z" />
+        <circle cx="12" cy="12" r="2" />
       </svg>
+      <span className="rule-gold w-16" />
     </div>
   );
 }

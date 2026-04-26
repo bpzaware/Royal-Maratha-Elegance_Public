@@ -6,20 +6,33 @@ interface GlassCardProps {
   className?: string;
   onClick?: () => void;
   hoverable?: boolean;
+  variant?: "default" | "soft";
 }
 
-export function GlassCard({ children, className, onClick, hoverable = false }: GlassCardProps) {
+/**
+ * Frosted card on warm cream backdrop.
+ * Use `hoverable` for clickable cards (gentle lift + saffron glow).
+ */
+export function GlassCard({
+  children,
+  className,
+  onClick,
+  hoverable = false,
+  variant = "default",
+}: GlassCardProps) {
   return (
     <div
       onClick={onClick}
       className={cn(
-        "glass-card rounded-xl p-6 relative overflow-hidden transition-all duration-300",
-        hoverable && "hover:-translate-y-1 hover:shadow-[0_8px_40px_rgba(212,175,55,0.15)] hover:border-primary/40 cursor-pointer",
+        variant === "default" ? "glass-card" : "glass-card-soft",
+        "rounded-2xl p-6 relative overflow-hidden transition-all duration-300",
+        hoverable &&
+          "hover:-translate-y-1 hover:shadow-[0_18px_50px_-20px_rgba(232,93,4,0.35)] hover:border-primary/45 cursor-pointer",
         className
       )}
     >
-      {/* Subtle top glare */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+      {/* Subtle inner gold rim */}
+      <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/40" />
       {children}
     </div>
   );

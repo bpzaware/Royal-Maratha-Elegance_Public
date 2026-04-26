@@ -11,12 +11,14 @@ export function CountdownTimer({ targetDate }: CountdownTimerProps) {
   if (hasArrived) {
     return (
       <div className="text-center py-8">
-        <h3 className="font-display text-2xl text-gold-gradient">The Day is Here!</h3>
+        <h3 className="font-display text-3xl text-saffron-gradient">
+          The Sacred Day Has Arrived
+        </h3>
       </div>
     );
   }
 
-  const timeUnits = [
+  const units = [
     { label: "Days", value: days },
     { label: "Hours", value: hours },
     { label: "Mins", value: minutes },
@@ -24,18 +26,19 @@ export function CountdownTimer({ targetDate }: CountdownTimerProps) {
   ];
 
   return (
-    <div className="flex justify-center gap-3 md:gap-6">
-      {timeUnits.map(({ label, value }) => (
-        <div key={label} className="flex flex-col items-center">
-          <GlassCard className="w-16 h-20 md:w-24 md:h-28 flex items-center justify-center p-0 mb-2">
-            <span className="font-serif text-3xl md:text-5xl text-foreground font-light tracking-tighter">
-              {value.toString().padStart(2, "0")}
-            </span>
-          </GlassCard>
-          <span className="text-xs md:text-sm font-medium tracking-widest text-primary/80 uppercase">
+    <div className="grid grid-cols-4 gap-3 md:gap-5 max-w-2xl mx-auto">
+      {units.map(({ label, value }) => (
+        <GlassCard
+          key={label}
+          className="flex flex-col items-center justify-center py-5 md:py-7 px-2"
+        >
+          <span className="font-display text-3xl md:text-5xl font-bold text-saffron-gradient leading-none">
+            {value.toString().padStart(2, "0")}
+          </span>
+          <span className="mt-3 text-[0.65rem] md:text-xs font-display tracking-[0.32em] uppercase text-foreground/55">
             {label}
           </span>
-        </div>
+        </GlassCard>
       ))}
     </div>
   );

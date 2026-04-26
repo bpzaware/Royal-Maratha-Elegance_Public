@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Heart } from "lucide-react";
+
 import { useDocumentMeta } from "@/hooks/useDocumentMeta";
 import { PageTransition } from "@/components/PageTransition";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -12,8 +14,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Check, Heart } from "lucide-react";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { SITE } from "@/config/site";
 
 const rsvpSchema = z.object({
   attending: z.boolean().default(true),
@@ -24,11 +33,16 @@ const rsvpSchema = z.object({
 
 type RsvpFormValues = z.infer<typeof rsvpSchema>;
 
+type GuestRecord = (typeof GUEST_LIST)[number];
+
 export default function RSVP() {
-  useDocumentMeta("RSVP", "RSVP for the wedding of Sanket & Bhagyashree.");
+  useDocumentMeta(
+    "RSVP",
+    `RSVP for the Shubh Vivah of ${SITE.groom} & ${SITE.bride}.`
+  );
 
   const [search, setSearch] = useState("");
-  const [selectedGuest, setSelectedGuest] = useState<typeof GUEST_LIST[number] | null>(null);
+  const [selectedGuest, setSelectedGuest] = useState<GuestRecord | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [notFound, setNotFound] = useState(false);
 
@@ -43,13 +57,12 @@ export default function RSVP() {
   });
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    setSearch(val);
+    setSearch(e.target.value);
     setSelectedGuest(null);
     setNotFound(false);
   };
 
-  const handleSelectGuest = (guest: typeof GUEST_LIST[number]) => {
+  const handleSelectGuest = (guest: GuestRecord) => {
     setSelectedGuest(guest);
     setSearch(guest.name);
     setNotFound(false);
@@ -58,56 +71,77 @@ export default function RSVP() {
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      const exactMatch = GUEST_LIST.find((g) => g.name.toLowerCase() === search.toLowerCase());
-      if (exactMatch) {
-        handleSelectGuest(exactMatch);
-      } else {
-        setNotFound(true);
-      }
+      const exact = GUEST_LIST.find(
+        (g) => g.name.toLowerCase() === search.toLowerCase()
+      );
+      if (exact) handleSelectGuest(exact);
+      else setNotFound(true);
     }
   };
 
-  const filteredGuests = search.length > 0 && !selectedGuest
-    ? GUEST_LIST.filter((g) => g.name.toLowerCase().includes(search.toLowerCase())).slice(0, 5)
-    : [];
+  const filteredGuests =
+    search.length > 0 && !selectedGuest
+      ? GUEST_LIST.filter((g) =>
+          g.name.toLowerCase().includes(search.toLowerCase())
+        ).slice(0, 5)
+      : [];
 
   const onSubmit = (data: RsvpFormValues) => {
     if (!selectedGuest) return;
-    
     const response = {
       guestId: selectedGuest.id,
       name: selectedGuest.name,
+      side: selectedGuest.side,
       ...data,
       timestamp: new Date().toISOString(),
     };
-    
     try {
-      const existing = JSON.parse(localStorage.getItem("rsvp_responses") || "[]");
-      localStorage.setItem("rsvp_responses", JSON.stringify([...existing, response]));
-    } catch (e) {}
-    
+      const existing = JSON.parse(
+        localStorage.getItem("rsvp_responses") || "[]"
+      );
+      localStorage.setItem(
+        "rsvp_responses",
+        JSON.stringify([...existing, response])
+      );
+    } catch {
+      // ignore — localStorage might be disabled
+    }
     setIsSubmitted(true);
   };
 
   return (
     <PageTransition>
       <div className="container mx-auto px-4 max-w-2xl">
-        <SectionHeading>Join Us in Celebration</SectionHeading>
+        <SectionHeading
+          eyebrow="Ashirwad Suchana"
+          subtitle="Your blessings complete our celebration. Kindly let us know if you can join us."
+        >
+          Confirm Your Sacred Presence
+        </SectionHeading>
 
         {isSubmitted ? (
           <GlassCard className="text-center py-12">
-            <Heart className="w-12 h-12 text-primary mx-auto mb-6" />
-            <h3 className="font-display text-2xl text-gold-gradient mb-4">Thank You!</h3>
+            <Heart className="w-12 h-12 text-secondary fill-secondary/20 mx-auto mb-6" />
+            <p className="font-marathi text-xl text-secondary mb-2">
+              धन्यवाद!
+            </p>
+            <h3 className="font-display text-2xl text-saffron-gradient mb-3">
+              Thank You
+            </h3>
             <p className="font-serif text-lg text-foreground/80">
-              We can't wait to celebrate with you, {selectedGuest?.name}.
+              We can't wait to celebrate with you,{" "}
+              <strong>{selectedGuest?.name}</strong>.
             </p>
           </GlassCard>
         ) : (
           <GlassCard className="p-6 md:p-10">
             {!selectedGuest ? (
               <div className="relative">
-                <Label htmlFor="name-search" className="text-lg font-serif mb-2 block text-foreground/90">
-                  Please enter your full name
+                <Label
+                  htmlFor="name-search"
+                  className="text-base font-display tracking-[0.16em] uppercase mb-3 block text-secondary"
+                >
+                  Please Enter Your Full Name
                 </Label>
                 <Input
                   id="name-search"
@@ -115,27 +149,28 @@ export default function RSVP() {
                   onChange={handleSearch}
                   onKeyDown={handleSearchKeyDown}
                   placeholder="e.g. Amit Patil"
-                  className="bg-black/50 border-primary/30 h-12 text-lg focus-visible:ring-primary/50"
+                  className="bg-white border-primary/30 h-12 text-base focus-visible:ring-primary"
                   autoComplete="off"
                 />
-                
+
                 {filteredGuests.length > 0 && (
-                  <div className="absolute top-full mt-2 w-full glass-card border border-primary/30 rounded-md overflow-hidden z-20">
+                  <div className="absolute top-full mt-2 w-full bg-white border border-primary/30 rounded-md overflow-hidden z-20 shadow-lg">
                     {filteredGuests.map((guest) => (
                       <button
                         key={guest.id}
                         onClick={() => handleSelectGuest(guest)}
-                        className="w-full text-left px-4 py-3 hover:bg-primary/20 transition-colors border-b border-primary/10 last:border-0"
+                        className="w-full text-left px-4 py-3 hover:bg-primary/10 transition-colors border-b border-primary/10 last:border-0"
                       >
                         {guest.name}
                       </button>
                     ))}
                   </div>
                 )}
-                
+
                 {notFound && (
-                  <div className="mt-4 p-4 rounded-md bg-secondary/20 border border-secondary/50 text-secondary-foreground/90 text-sm">
-                    We couldn't find your name on the guest list. Please contact the family for invitation assistance.
+                  <div className="mt-4 p-4 rounded-md bg-secondary/10 border border-secondary/30 text-secondary text-sm">
+                    We couldn't find your name on the guest list. Please contact
+                    the family for invitation assistance.
                   </div>
                 )}
               </div>
@@ -143,11 +178,18 @@ export default function RSVP() {
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="flex items-center justify-between mb-8 pb-4 border-b border-primary/20">
                   <div>
-                    <h3 className="font-display text-xl text-primary">{selectedGuest.name}</h3>
-                    <p className="text-sm text-foreground/60 capitalize">{selectedGuest.side}'s Side</p>
+                    <h3 className="font-display text-xl text-secondary">
+                      {selectedGuest.name}
+                    </h3>
+                    <p className="text-sm text-foreground/60 capitalize">
+                      {selectedGuest.side}'s Side
+                    </p>
                   </div>
-                  <button 
-                    onClick={() => { setSelectedGuest(null); setSearch(""); }}
+                  <button
+                    onClick={() => {
+                      setSelectedGuest(null);
+                      setSearch("");
+                    }}
                     className="text-sm text-primary hover:underline"
                   >
                     Not you?
@@ -155,22 +197,29 @@ export default function RSVP() {
                 </div>
 
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-6"
+                  >
                     <FormField
                       control={form.control}
                       name="attending"
                       render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-primary/20 p-4 bg-black/20">
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-primary/25 p-4 bg-primary/5">
                           <FormControl>
                             <Checkbox
                               checked={field.value}
                               onCheckedChange={field.onChange}
-                              className="border-primary data-[state=checked]:bg-primary data-[state=checked]:text-black"
+                              className="border-primary data-[state=checked]:bg-primary data-[state=checked]:text-white"
                             />
                           </FormControl>
                           <div className="space-y-1 leading-none">
-                            <FormLabel className="text-base font-medium">Joyfully Accepts</FormLabel>
-                            <p className="text-sm text-foreground/60">I wouldn't miss it for the world!</p>
+                            <FormLabel className="text-base font-medium">
+                              Joyfully Accepts
+                            </FormLabel>
+                            <p className="text-sm text-foreground/60">
+                              I will be there to bless the couple.
+                            </p>
                           </div>
                         </FormItem>
                       )}
@@ -181,17 +230,21 @@ export default function RSVP() {
                         control={form.control}
                         name="plusOne"
                         render={({ field }) => (
-                          <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-primary/20 p-4 bg-black/20">
+                          <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-primary/25 p-4 bg-primary/5">
                             <FormControl>
                               <Checkbox
                                 checked={field.value}
                                 onCheckedChange={field.onChange}
-                                className="border-primary data-[state=checked]:bg-primary data-[state=checked]:text-black"
+                                className="border-primary data-[state=checked]:bg-primary data-[state=checked]:text-white"
                               />
                             </FormControl>
                             <div className="space-y-1 leading-none">
-                              <FormLabel className="text-base font-medium">Bringing a Plus One</FormLabel>
-                              <p className="text-sm text-foreground/60">My partner/guest will join me.</p>
+                              <FormLabel className="text-base font-medium">
+                                Bringing a Plus One
+                              </FormLabel>
+                              <p className="text-sm text-foreground/60">
+                                My partner / guest will accompany me.
+                              </p>
                             </div>
                           </FormItem>
                         )}
@@ -205,12 +258,14 @@ export default function RSVP() {
                           name="dietaryNotes"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Dietary Requirements / Allergies</FormLabel>
+                              <FormLabel>
+                                Dietary Requirements / Allergies
+                              </FormLabel>
                               <FormControl>
-                                <Textarea 
-                                  placeholder="Let us know if you have any specific dietary needs..."
-                                  className="bg-black/50 border-primary/30 focus-visible:ring-primary/50 resize-none"
-                                  {...field} 
+                                <Textarea
+                                  placeholder="Jain, vegan, gluten-free, allergies..."
+                                  className="bg-white border-primary/30 focus-visible:ring-primary resize-none"
+                                  {...field}
                                 />
                               </FormControl>
                               <FormMessage />
@@ -223,12 +278,14 @@ export default function RSVP() {
                           name="message"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Message for the Couple</FormLabel>
+                              <FormLabel>
+                                A Blessing or Note for the Couple
+                              </FormLabel>
                               <FormControl>
-                                <Textarea 
-                                  placeholder="Leave a sweet note or song request..."
-                                  className="bg-black/50 border-primary/30 focus-visible:ring-primary/50 resize-none h-24"
-                                  {...field} 
+                                <Textarea
+                                  placeholder="Share a wish, a song request, or a memory..."
+                                  className="bg-white border-primary/30 focus-visible:ring-primary resize-none h-24"
+                                  {...field}
                                 />
                               </FormControl>
                               <FormMessage />
@@ -240,7 +297,7 @@ export default function RSVP() {
 
                     <div className="pt-4">
                       <GoldButton type="submit" className="w-full">
-                        Submit RSVP
+                        Send My Response
                       </GoldButton>
                     </div>
                   </form>
