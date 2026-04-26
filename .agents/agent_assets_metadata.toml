@@ -1,0 +1,38 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "V8NFRqMCPWRtYqhH8Pjz0"
+uri = "file://artifacts/wedding/src/assets/hero-couple.png"
+type = "image"
+title = "Indian royal couple silhouette"
+
+[[generated]]
+id = "WY-1_GxUWqHjJ4kLMHBaL"
+uri = "file://artifacts/wedding/src/assets/mandala.png"
+type = "image"
+title = "Glowing gold mandala ornament"
+
+[[generated]]
+id = "ZQa2mhDgjm2mHUtgIwoJi"
+uri = "file://artifacts/wedding/src/assets/venue-exterior.png"
+type = "image"
+title = "River Paradise Resort exterior"
+
+[[generated]]
+id = "WM4ZjbYim33TAJ1WEfVlq"
+uri = "file://artifacts/wedding/src/assets/taj-mahal.png"
+type = "image"
+title = "Taj Mahal cinematic"
+
+[[generated]]
+id = "IpJyuxvJN4-Mpj9O-F18H"
+uri = "file://artifacts/wedding/src/assets/kerala.png"
+type = "image"
+title = "Kerala backwaters boat"
+
+[[generated]]
+id = "f2NUNRt0WaehHyB1TgBed"
+uri = "file://artifacts/wedding/src/assets/jaipur.png"
+type = "image"
+title = "Jaipur palace glowing"

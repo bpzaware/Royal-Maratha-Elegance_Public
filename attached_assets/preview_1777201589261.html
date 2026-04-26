@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Royal Union of Sanket & Bhagyashree</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+--bg:#060606;
+--bg2:#12070b;
+--gold:#d4af37;
+--gold2:#f6e6a8;
+--maroon:#5b0f1a;
+--maroon2:#2a050a;
+--text:#f7f2e8;
+--muted:#c9bda3;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+font-family:Inter,sans-serif;
+background:
+radial-gradient(circle at top right,#2a050a 0%,transparent 35%),
+radial-gradient(circle at bottom left,#201005 0%,transparent 35%),
+linear-gradient(135deg,var(--bg),#090909,var(--bg2));
+color:var(--text);
+overflow-x:hidden;
+}
+
+/* particles */
+#particles{
+position:fixed;
+inset:0;
+z-index:0;
+pointer-events:none;
+}
+
+/* nav */
+nav{
+position:fixed;
+top:0;
+left:0;
+right:0;
+z-index:1000;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 40px;
+background:rgba(0,0,0,.45);
+backdrop-filter:blur(10px);
+border-bottom:1px solid rgba(212,175,55,.18);
+}
+.logo{
+font-family:Cinzel,serif;
+letter-spacing:.15em;
+font-size:14px;
+color:var(--gold2);
+}
+nav a{
+color:var(--muted);
+text-decoration:none;
+margin-left:22px;
+font-size:14px;
+transition:.3s;
+}
+nav a:hover{color:var(--gold2)}
+
+/* hero */
+.hero{
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+padding:120px 20px 80px;
+position:relative;
+z-index:2;
+overflow:hidden;
+}
+
+.glow-ring{
+position:absolute;
+width:520px;
+height:520px;
+border-radius:50%;
+border:1px solid rgba(212,175,55,.15);
+box-shadow:0 0 80px rgba(212,175,55,.08), inset 0 0 50px rgba(212,175,55,.04);
+animation:spin 22s linear infinite;
+}
+
+.glow-ring:before{
+content:"";
+position:absolute;
+inset:25px;
+border-radius:50%;
+border:1px dashed rgba(212,175,55,.12);
+}
+
+@keyframes spin{
+from{transform:rotate(0deg)}
+to{transform:rotate(360deg)}
+}
+
+.hero-content{
+max-width:900px;
+position:relative;
+z-index:5;
+animation:fadeUp 1.5s ease;
+}
+
+.kicker{
+letter-spacing:.45em;
+font-size:12px;
+color:var(--gold);
+margin-bottom:18px;
+text-transform:uppercase;
+}
+
+h1{
+font-family:Cinzel,serif;
+font-size:clamp(38px,7vw,78px);
+line-height:1.1;
+font-weight:700;
+background:linear-gradient(180deg,var(--gold2),var(--gold));
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+margin-bottom:18px;
+}
+
+.subtitle{
+font-size:18px;
+color:var(--muted);
+margin-bottom:28px;
+}
+
+.date{
+font-size:16px;
+letter-spacing:.18em;
+color:#fff;
+margin-bottom:10px;
+}
+
+.venue{
+font-size:15px;
+color:var(--muted);
+margin-bottom:36px;
+}
+
+.btns{
+display:flex;
+gap:16px;
+justify-content:center;
+flex-wrap:wrap;
+}
+
+.btn{
+padding:14px 28px;
+border-radius:40px;
+border:none;
+cursor:pointer;
+font-weight:600;
+letter-spacing:.08em;
+transition:.35s;
+text-decoration:none;
+display:inline-block;
+}
+
+.btn-primary{
+background:linear-gradient(135deg,var(--gold),#9e7417);
+color:#111;
+}
+.btn-primary:hover{
+transform:translateY(-3px) scale(1.02);
+box-shadow:0 10px 35px rgba(212,175,55,.25);
+}
+
+.btn-secondary{
+background:transparent;
+border:1px solid rgba(212,175,55,.35);
+color:var(--gold2);
+}
+.btn-secondary:hover{
+background:rgba(212,175,55,.08);
+transform:translateY(-3px);
+}
+
+/* sections */
+section{
+position:relative;
+z-index:2;
+padding:90px 22px;
+}
+
+.container{
+max-width:1180px;
+margin:auto;
+}
+
+.title{
+font-family:Cinzel,serif;
+font-size:42px;
+text-align:center;
+margin-bottom:12px;
+color:var(--gold2);
+}
+
+.desc{
+text-align:center;
+max-width:720px;
+margin:0 auto 50px;
+color:var(--muted);
+line-height:1.8;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:22px;
+}
+
+.card{
+background:linear-gradient(145deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+border:1px solid rgba(212,175,55,.14);
+border-radius:22px;
+padding:28px;
+backdrop-filter:blur(12px);
+transform-style:preserve-3d;
+transition:.45s;
+}
+.card:hover{
+transform:rotateX(6deg) rotateY(-6deg) translateY(-8px);
+box-shadow:0 20px 45px rgba(0,0,0,.45);
+}
+
+.card h3{
+font-family:Cinzel,serif;
+color:var(--gold2);
+margin-bottom:12px;
+font-size:22px;
+}
+.card p{
+color:var(--muted);
+line-height:1.7;
+font-size:15px;
+}
+
+.timeline{
+display:grid;
+gap:18px;
+max-width:850px;
+margin:auto;
+}
+
+.event{
+padding:22px;
+border-left:3px solid var(--gold);
+background:rgba(255,255,255,.02);
+border-radius:14px;
+}
+
+.event h4{
+font-family:Cinzel,serif;
+font-size:22px;
+color:var(--gold2);
+margin-bottom:8px;
+}
+
+.gallery{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:18px;
+}
+
+.photo{
+height:260px;
+border-radius:20px;
+background:
+linear-gradient(135deg,#3d0c14,#151515,#5a3a0d);
+border:1px solid rgba(212,175,55,.15);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:42px;
+transition:.45s;
+}
+.photo:hover{
+transform:scale(1.04) rotate(1deg);
+}
+
+.rsvp{
+max-width:720px;
+margin:auto;
+padding:38px;
+border-radius:24px;
+border:1px solid rgba(212,175,55,.18);
+background:linear-gradient(145deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+}
+
+input,textarea{
+width:100%;
+padding:14px;
+margin-bottom:14px;
+border-radius:14px;
+border:1px solid rgba(255,255,255,.08);
+background:#111;
+color:#fff;
+font-family:Inter,sans-serif;
+}
+
+footer{
+padding:50px 20px;
+text-align:center;
+color:var(--muted);
+border-top:1px solid rgba(212,175,55,.1);
+margin-top:40px;
+}
+
+.music{
+position:fixed;
+right:20px;
+bottom:20px;
+z-index:999;
+background:#111;
+border:1px solid rgba(212,175,55,.25);
+color:var(--gold2);
+padding:12px 16px;
+border-radius:40px;
+cursor:pointer;
+}
+
+/* animations */
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(40px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+.reveal{
+opacity:0;
+transform:translateY(40px);
+transition:1s ease;
+}
+.reveal.show{
+opacity:1;
+transform:translateY(0);
+}
+
+@media(max-width:768px){
+nav{padding:16px}
+nav div:last-child{display:none}
+.title{font-size:34px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<nav>
+<div class="logo">ROYAL UNION</div>
+<div>
+<a href="#story">Story</a>
+<a href="#events">Events</a>
+<a href="#venue">Venue</a>
+<a href="#gallery">Gallery</a>
+<a href="#rsvp">RSVP</a>
+</div>
+</nav>
+
+<header class="hero">
+<div class="glow-ring"></div>
+
+<div class="hero-content">
+<div class="kicker">26 NOVEMBER 2026</div>
+<h1>The Royal Union of<br>Sanket & Bhagyashree</h1>
+<p class="subtitle">A celebration of heritage, love, and timeless elegance.</p>
+<div class="date">RIVER PARADISE RESORT</div>
+<div class="venue">SH65, Kolavadi, Maharashtra 412213, India</div>
+
+<div class="btns">
+<a href="#rsvp" class="btn btn-primary">RSVP NOW</a>
+<a href="#events" class="btn btn-secondary">VIEW EVENTS</a>
+</div>
+</div>
+</header>
+
+<section id="story" class="reveal">
+<div class="container">
+<h2 class="title">Our Royal Story</h2>
+<p class="desc">
+Two hearts, one destiny. Sanket and Bhagyashree invite you to witness
+the beginning of a beautiful forever, wrapped in love, blessings, and grandeur.
+</p>
+
+<div class="grid">
+<div class="card">
+<h3>First Meeting</h3>
+<p>A chance encounter that turned into unforgettable conversations and endless smiles.</p>
+</div>
+
+<div class="card">
+<h3>Growing Together</h3>
+<p>From shared dreams to cherished memories, every chapter led us here.</p>
+</div>
+
+<div class="card">
+<h3>Forever Begins</h3>
+<p>Now, surrounded by loved ones, we celebrate a bond made for eternity.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section id="events" class="reveal">
+<div class="container">
+<h2 class="title">Wedding Celebrations</h2>
+<p class="desc">A royal two-day celebration filled with tradition, joy and unforgettable moments.</p>
+
+<div class="timeline">
+<div class="event">
+<h4>Day 1 · Haldi & Sangeet</h4>
+<p>Golden laughter, vibrant colors, dance, music and celebration.</p>
+</div>
+
+<div class="event">
+<h4>Day 2 · Sacred Ceremony</h4>
+<p>Pheras, vows, blessings, and the union of two souls.</p>
+</div>
+
+<div class="event">
+<h4>Royal Reception</h4>
+<p>An evening of elegance, fine dining, music and cherished memories.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section id="venue" class="reveal">
+<div class="container">
+<h2 class="title">The Venue</h2>
+<p class="desc">
+River Paradise Resort, a serene riverside destination where luxury meets nature.
+</p>
+
+<div class="grid">
+<div class="card">
+<h3>Location</h3>
+<p>SH65, Kolavadi, Maharashtra 412213, India</p>
+</div>
+
+<div class="card">
+<h3>Stay</h3>
+<p>Premium rooms, resort amenities and a luxurious wedding experience.</p>
+</div>
+
+<div class="card">
+<h3>Website</h3>
+<p>riverparadiseresort.com</p>
+</div>
+</div>
+</div>
+</section>
+
+<section id="gallery" class="reveal">
+<div class="container">
+<h2 class="title">Royal Memories</h2>
+<p class="desc">Guests can upload photos via QR code and see them here live.</p>
+
+<div class="gallery">
+<div class="photo">👑</div>
+<div class="photo">✨</div>
+<div class="photo">🌹</div>
+<div class="photo">📸</div>
+</div>
+</div>
+</section>
+
+<section id="rsvp" class="reveal">
+<div class="container">
+<h2 class="title">RSVP</h2>
+<p class="desc">Bless us with your presence.</p>
+
+<div class="rsvp">
+<input placeholder="Full Name">
+<input placeholder="Number of Guests">
+<input placeholder="Email / Phone">
+<textarea rows="5" placeholder="Message for the couple"></textarea>
+<button class="btn btn-primary" style="width:100%">Confirm Attendance</button>
+</div>
+</div>
+</section>
+
+<footer>
+<p>The Royal Union of Sanket & Bhagyashree</p>
+<p>Designed with love · Dark Royal Luxury Edition</p>
+</footer>
+
+<button class="music" onclick="toggleMusic()">🔊 Music</button>
+
+<audio id="bgm" loop>
+<source src="">
+</audio>
+
+<script>
+/* reveal on scroll */
+const observer = new IntersectionObserver(entries=>{
+entries.forEach(entry=>{
+if(entry.isIntersecting) entry.target.classList.add('show');
+});
+},{threshold:.15});
+
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+/* particles */
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+let w,h,parts=[];
+
+function resize(){
+w=canvas.width=window.innerWidth;
+h=canvas.height=window.innerHeight;
+}
+window.addEventListener("resize",resize);
+resize();
+
+for(let i=0;i<80;i++){
+parts.push({
+x:Math.random()*w,
+y:Math.random()*h,
+r:Math.random()*2+1,
+s:Math.random()*0.7+0.2
+});
+}
+
+function animate(){
+ctx.clearRect(0,0,w,h);
+parts.forEach(p=>{
+p.y+=p.s;
+if(p.y>h){p.y=0;p.x=Math.random()*w}
+ctx.beginPath();
+ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+ctx.fillStyle="rgba(212,175,55,.65)";
+ctx.fill();
+});
+requestAnimationFrame(animate);
+}
+animate();
+
+/* fake music toggle */
+let playing=false;
+function toggleMusic(){
+playing=!playing;
+document.querySelector('.music').innerText=playing?'🔇 Mute':'🔊 Music';
+}
+</script>
+
+</body>
+</html>
