@@ -1,0 +1,95 @@
+$ cd C:\Dev\Wedding website\Royal-Maratha-Elegance_Public\package.json
+bash: cd: too many arguments
+
+Bhagyashree@Laptop_Bhagya MINGW64 /c/Dev
+$ cd C:\Dev\Wedding website\Royal-Maratha-Elegance_Public
+bash: cd: too many arguments
+
+Bhagyashree@Laptop_Bhagya MINGW64 /c/Dev
+$ ls
+ Website/  'Wedding website'/
+
+Bhagyashree@Laptop_Bhagya MINGW64 /c/Dev
+$ cd Wedding\ website/
+
+Bhagyashree@Laptop_Bhagya MINGW64 /c/Dev/Wedding website
+$ ls
+Royal-Maratha-Elegance_Public/  WeddingWebsite/
+
+Bhagyashree@Laptop_Bhagya MINGW64 /c/Dev/Wedding website
+$ cd Royal-Maratha-Elegance_Public/
+
+Bhagyashree@Laptop_Bhagya MINGW64 /c/Dev/Wedding website/Royal-Maratha-Elegance_Public (main)
+$ ls
+artifacts/        node_modules/   pnpm-workspace.yaml  tsconfig.base.json
+attached_assets/  package.json    replit.md            tsconfig.json
+lib/              pnpm-lock.yaml  scripts/
+
+Bhagyashree@Laptop_Bhagya MINGW64 /c/Dev/Wedding website/Royal-Maratha-Elegance_Public (main)
+$ cd artifacts/
+
+Bhagyashree@Laptop_Bhagya MINGW64 /c/Dev/Wedding website/Royal-Maratha-Elegance_Public/artifacts (main)
+$ ls
+api-server/  mockup-sandbox/  wedding/  wedding-export/  wedding-netlify/
+
+Bhagyashree@Laptop_Bhagya MINGW64 /c/Dev/Wedding website/Royal-Maratha-Elegance_Public/artifacts (main)
+$ cd .
+
+Bhagyashree@Laptop_Bhagya MINGW64 /c/Dev/Wedding website/Royal-Maratha-Elegance_Public/artifacts (main)
+$ ls
+api-server/  mockup-sandbox/  wedding/  wedding-export/  wedding-netlify/
+
+Bhagyashree@Laptop_Bhagya MINGW64 /c/Dev/Wedding website/Royal-Maratha-Elegance_Public/artifacts (main)
+$ pnpm install
+Scope: all 9 workspace projects
+Lockfile is up to date, resolution step is skipped
+Already up to date
+. preinstall$ sh -c 'rm -f package-lock.json yarn.lock; case "$npm_config_user_agent" in pnpm/*) ;; …
+└─ Done in 106ms
+Done in 1.3s using pnpm v10.33.2
+
+Bhagyashree@Laptop_Bhagya MINGW64 /c/Dev/Wedding website/Royal-Maratha-Elegance_Public/artifacts (main)
+$ pnpm --filter @workspace/wedding run dev
+
+> @workspace/wedding@0.0.0 dev C:\Dev\Wedding website\Royal-Maratha-Elegance_Public\artifacts\wedding
+> vite --config vite.config.ts --host 0.0.0.0
+
+C:\Dev\Wedding website\Royal-Maratha-Elegance_Public\node_modules\.pnpm\rollup@4.59.0\node_modules\rollup\dist\native.js:115
+                throw new Error(
+                      ^
+
+Error: Cannot find module @rollup/rollup-win32-x64-msvc. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.
+    at requireWithFriendlyError (C:\Dev\Wedding website\Royal-Maratha-Elegance_Public\node_modules\.pnpm\rollup@4.59.0\node_modules\rollup\dist\native.js:115:9)
+    at Object.<anonymous> (C:\Dev\Wedding website\Royal-Maratha-Elegance_Public\node_modules\.pnpm\rollup@4.59.0\node_modules\rollup\dist\native.js:124:76)
+    at Module._compile (node:internal/modules/cjs/loader:1830:14)
+    at Object..js (node:internal/modules/cjs/loader:1961:10)
+    at Module.load (node:internal/modules/cjs/loader:1553:32)
+    at Module._load (node:internal/modules/cjs/loader:1355:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at loadCJSModuleWithModuleLoad (node:internal/modules/esm/translators:326:3)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:231:7)
+    at ModuleJob.run (node:internal/modules/esm/module_job:437:25) {
+  [cause]: Error: Cannot find module '@rollup/rollup-win32-x64-msvc'
+  Require stack:
+  - C:\Dev\Wedding website\Royal-Maratha-Elegance_Public\node_modules\.pnpm\rollup@4.59.0\node_modules\rollup\dist\native.js
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1476:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1049:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1073:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1094:12)
+      at Module._load (node:internal/modules/cjs/loader:1262:25)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+      at Module.require (node:internal/modules/cjs/loader:1576:12)
+      at require (node:internal/modules/helpers:153:16)
+      at requireWithFriendlyError (C:\Dev\Wedding website\Royal-Maratha-Elegance_Public\node_modules\.pnpm\rollup@4.59.0\node_modules\rollup\dist\native.js:97:10)
+      at Object.<anonymous> (C:\Dev\Wedding website\Royal-Maratha-Elegance_Public\node_modules\.pnpm\rollup@4.59.0\node_modules\rollup\dist\native.js:124:76) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      'C:\\Dev\\Wedding website\\Royal-Maratha-Elegance_Public\\node_modules\\.pnpm\\rollup@4.59.0\\node_modules\\rollup\\dist\\native.js'
+    ]
+  }
+}
+
+Node.js v24.15.0
+C:\Dev\Wedding website\Royal-Maratha-Elegance_Public\artifacts\wedding:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/wedding@0.0.0 dev: `vite --config vite.config.ts --host 0.0.0.0`
+Exit status 1
